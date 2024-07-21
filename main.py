@@ -56,8 +56,21 @@ class Game:
             # Collision detection
             if self.ball.x - (self.paddle1.x + self.paddle1.width) <= self.ball.size and self.ball.y >= self.paddle1.y and self.ball.y <= self.paddle1.y + self.paddle1.height:
                 self.ball.velocity[0] *= -1
-            if (self.paddle2.x + self.paddle2.width)- self.ball.x <= self.ball.size and self.ball.y >= self.paddle2.y and self.ball.y <= self.paddle2.y + self.paddle2.height:
+
+                #Check if ball hit top or bottom of paddle1
+                if self.ball.y < self.paddle1.y + self.paddle1.height / 2: # top
+                    self.ball.velocity[1] = -5
+                if self.ball.y > self.paddle1.y + self.paddle1.height / 2: # bottom
+                    self.ball.velocity[1] = 5
+                
+            if (self.paddle2.x + self.paddle2.width) - self.ball.x <= self.ball.size and self.ball.y >= self.paddle2.y and self.ball.y <= self.paddle2.y + self.paddle2.height:
                 self.ball.velocity[0] *= -1
+
+                #Check if ball hit top or bottom of paddle2
+                if self.ball.y < self.paddle2.y + self.paddle2.height / 2: # top
+                    self.ball.velocity[1] = -5
+                if self.ball.y > self.paddle2.y + self.paddle2.height / 2: # bottom
+                    self.ball.velocity[1] = 5
             
             pressed = pygame.key.get_pressed()
             #Paddle 1 movement
