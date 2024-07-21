@@ -14,6 +14,7 @@ class Game:
     def __init__(self):
         pygame.init()
         self.window = pygame.display.set_mode((600, 600))
+        pygame.display.set_caption("Pong")
         self.clock = pygame.time.Clock()
 
         self.paddle1 = entities.Paddle((255, 255, 255), 10, 200, 10, 100)
@@ -22,6 +23,8 @@ class Game:
 
         self.ball_random_y_pos = random.randint(10, 500)
         self.ball = entities.Ball((255, 255, 255), 300, self.ball_random_y_pos, 10, 5, 5)
+
+        self.font = pygame.font.Font("Arial.ttf", 32)
 
     def run(self):
         while True:
@@ -72,6 +75,12 @@ class Game:
             self.window.fill((0, 0, 0))
 
             # Update entities
+            self.player1_score_text = self.font.render(f"Player 1: {Game.player1_score}", True, (255, 255, 255))
+            self.window.blit(self.player1_score_text, (10, 10))
+
+            self.player2_score_text = self.font.render(f"Player 2: {Game.player2_score}", True, (255, 255, 255))
+            self.window.blit(self.player2_score_text, (430, 10))
+
             self.paddle1.draw(self.window)
             self.paddle2.draw(self.window)
 
