@@ -3,11 +3,12 @@ pygame.init()
 
 class Ball():
 
-    def __init__(self, color, x, y, size):
+    def __init__(self, color, x, y, size, velocity_x, velocity_y):
         self.color = color
         self.x = x
         self.y = y
         self.size = size
+        self.velocity = [velocity_x, velocity_y]
 
     def draw(self, screen):
         pygame.draw.circle(screen, self.color, [self.x, self.y], self.size)

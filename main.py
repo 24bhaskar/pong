@@ -13,7 +13,7 @@ class Game:
                                         #color           x   y  width height
         self.paddle2 = entities.Paddle((255, 255, 255), 580, 200, 10, 100)
 
-        self.ball = entities.Ball((255, 255, 255), 300, 300, 10)
+        self.ball = entities.Ball((255, 255, 255), 300, 300, 10, 5, 5)
 
     def run(self):
         while True:
@@ -22,6 +22,21 @@ class Game:
                     pygame.quit()
                     sys.exit()
 
+            # ball initial movement and bouncing off walls
+            if self.ball.x + self.ball.size >= 600 or self.ball.x - self.ball.size < 0:
+                self.ball.velocity[0] = -self.ball.velocity[0]
+            if self.ball.y + self.ball.size >= 600 or self.ball.y - self.ball.size < 0:
+                self.ball.velocity[1] = -self.ball.velocity[1]
+            #circle movement and bouncing
+            self.ball.x += self.ball.velocity[0]
+            self.ball.y += self.ball.velocity[1]
+            # Collision detection
+            if self.ball.x - (self.paddle1.x + self.paddle1.width) <= self.ball.size:
+                # check if ball is hitting top or bottom of paddle 1
+                self.ball.velocity[0] *= -1
+            if (self.paddle2.x + self.paddle2.width)- self.ball.x <= self.ball.size:
+                self.ball.velocity[0] *= -1
+            
             pressed = pygame.key.get_pressed()
             #Paddle 1 movement
             if pressed[pygame.K_w]:
@@ -34,15 +49,9 @@ class Game:
             if pressed[pygame.K_DOWN]:
                 self.paddle2.move_down(5)
 
-            # Collision detection
-            if self.ball.x - (self.paddle1.x + self.paddle1.width) <= self.ball.size:
-                # check if ball is hitting top or bottom of paddle 1
-                if self.ball.y < self.paddle1.y + (self.paddle1.height / 2):
-                    print("collision with top half of paddle 1")
-                if self.ball.y > self.paddle1.y + (self.paddle1.height / 2):
-                    print("collision with bottom half of paddle 1")
+            
 
-            #ball movement
+            # ball movement
             if pressed[pygame.K_i]:
                 self.ball.move_up(5)
             if pressed[pygame.K_k]:
