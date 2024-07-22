@@ -79,12 +79,12 @@ class Game:
                         self.ball.velocity[1] = 6.5
                 
                 pressed = pygame.key.get_pressed()
-                #Paddle 1 movement
+                # Paddle 1 movement (player controlled)
                 if pressed[pygame.K_w]:
                     self.paddle1.move_up(5)
                 if pressed[pygame.K_s]:
                     self.paddle1.move_down(5)
-                #Paddle 2 movement
+                # Paddle 2 movement (player controlled)
                 if pressed[pygame.K_UP]:
                     self.paddle2.move_up(5)
                 if pressed[pygame.K_DOWN]:
@@ -111,7 +111,7 @@ class Game:
             else:
                 pygame.display.update()
                 self.clock.tick(60)
-
+                
                 continue
 
 Game().run()
