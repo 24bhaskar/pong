@@ -10,6 +10,7 @@ class Game:
     player2_score = 0
 
     state = "running"
+    state_counter = 0
 
     def __init__(self):
         pygame.init()
@@ -22,7 +23,7 @@ class Game:
         self.paddle2 = entities.Paddle((255, 255, 255), 580, 200, 10, 100)
 
         self.ball_random_y_pos = random.randint(10, 500)
-        self.ball = entities.Ball((255, 255, 255), 300, self.ball_random_y_pos, 10, 5, 5)
+        self.ball = entities.Ball((255, 255, 255), 300, self.ball_random_y_pos, 10, 6.5, 6.5)
 
         self.font = pygame.font.Font("Arial.ttf", 32)
 
@@ -35,71 +36,82 @@ class Game:
                 #pause key press
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_p:
-                        pass
+                        Game.state_counter += 1
+                        if Game.state_counter % 2 == 0:
+                            Game.state = "running"
+                        else:
+                            Game.state = "paused"
             
-            if self.ball.x + self.ball.size >= 600:
-                Game.player1_score += 1
-                print(f"Player 1: {self.player1_score}, Player 2: {self.player2_score}")
-                Game().run()
-            
-            if self.ball.x - self.ball.size < 0:
-                Game.player2_score += 1
-                print(f"Player 1: {self.player1_score}, Player 2: {self.player2_score}")
-                Game().run()
-
-            # ball bouncing off walls
-            if self.ball.y + self.ball.size >= 600 or self.ball.y - self.ball.size < 0:
-                self.ball.velocity[1] *= -1
-            #circle movement and bouncing
-            self.ball.x += self.ball.velocity[0]
-            self.ball.y += self.ball.velocity[1]
-            # Collision detection
-            if self.ball.x - (self.paddle1.x + self.paddle1.width) <= self.ball.size and self.ball.y >= self.paddle1.y and self.ball.y <= self.paddle1.y + self.paddle1.height:
-                self.ball.velocity[0] *= -1
-
-                #Check if ball hit top or bottom of paddle1
-                if self.ball.y < self.paddle1.y + self.paddle1.height / 2: # top
-                    self.ball.velocity[1] = -5
-                if self.ball.y > self.paddle1.y + self.paddle1.height / 2: # bottom
-                    self.ball.velocity[1] = 5
+            if Game.state == "running":
+                if self.ball.x + self.ball.size >= 600:
+                    Game.player1_score += 1
+                    print(f"Player 1: {self.player1_score}, Player 2: {self.player2_score}")
+                    Game().run()
                 
-            if (self.paddle2.x + self.paddle2.width) - self.ball.x <= self.ball.size and self.ball.y >= self.paddle2.y and self.ball.y <= self.paddle2.y + self.paddle2.height:
-                self.ball.velocity[0] *= -1
+                if self.ball.x - self.ball.size < 0:
+                    Game.player2_score += 1
+                    print(f"Player 1: {self.player1_score}, Player 2: {self.player2_score}")
+                    Game().run()
 
-                #Check if ball hit top or bottom of paddle2
-                if self.ball.y < self.paddle2.y + self.paddle2.height / 2: # top
-                    self.ball.velocity[1] = -5
-                if self.ball.y > self.paddle2.y + self.paddle2.height / 2: # bottom
-                    self.ball.velocity[1] = 5
-            
-            pressed = pygame.key.get_pressed()
-            #Paddle 1 movement
-            if pressed[pygame.K_w]:
-                self.paddle1.move_up(5)
-            if pressed[pygame.K_s]:
-                self.paddle1.move_down(5)
-            #Paddle 2 movement
-            if pressed[pygame.K_UP]:
-                self.paddle2.move_up(5)
-            if pressed[pygame.K_DOWN]:
-                self.paddle2.move_down(5)
+                # ball bouncing off walls
+                if self.ball.y + self.ball.size >= 600 or self.ball.y - self.ball.size < 0:
+                    self.ball.velocity[1] *= -1
+                #circle movement and bouncing
+                self.ball.x += self.ball.velocity[0]
+                self.ball.y += self.ball.velocity[1]
+                # Collision detection
+                if self.ball.x - (self.paddle1.x + self.paddle1.width) <= self.ball.size and self.ball.y >= self.paddle1.y and self.ball.y <= self.paddle1.y + self.paddle1.height:
+                    self.ball.velocity[0] *= -1
 
-            # Reset screen to black
-            self.window.fill((0, 0, 0))
+                    #Check if ball hit top or bottom of paddle1
+                    if self.ball.y < self.paddle1.y + self.paddle1.height / 2: # top
+                        self.ball.velocity[1] = -6.5
+                    if self.ball.y > self.paddle1.y + self.paddle1.height / 2: # bottom
+                        self.ball.velocity[1] = 6.5
+                    
+                if (self.paddle2.x + self.paddle2.width) - self.ball.x <= self.ball.size and self.ball.y >= self.paddle2.y and self.ball.y <= self.paddle2.y + self.paddle2.height:
+                    self.ball.velocity[0] *= -1
 
-            # Update entities
-            self.player1_score_text = self.font.render(f"Player 1: {Game.player1_score}", True, (255, 255, 255))
-            self.window.blit(self.player1_score_text, (10, 10))
+                    #Check if ball hit top or bottom of paddle2
+                    if self.ball.y < self.paddle2.y + self.paddle2.height / 2: # top
+                        self.ball.velocity[1] = -6.5
+                    if self.ball.y > self.paddle2.y + self.paddle2.height / 2: # bottom
+                        self.ball.velocity[1] = 6.5
+                
+                pressed = pygame.key.get_pressed()
+                #Paddle 1 movement
+                if pressed[pygame.K_w]:
+                    self.paddle1.move_up(5)
+                if pressed[pygame.K_s]:
+                    self.paddle1.move_down(5)
+                #Paddle 2 movement
+                if pressed[pygame.K_UP]:
+                    self.paddle2.move_up(5)
+                if pressed[pygame.K_DOWN]:
+                    self.paddle2.move_down(5)
 
-            self.player2_score_text = self.font.render(f"Player 2: {Game.player2_score}", True, (255, 255, 255))
-            self.window.blit(self.player2_score_text, (430, 10))
+                # Reset screen to black
+                self.window.fill((0, 0, 0))
 
-            self.paddle1.draw(self.window)
-            self.paddle2.draw(self.window)
+                # Update entities
+                self.player1_score_text = self.font.render(f"Player 1: {Game.player1_score}", True, (255, 255, 255))
+                self.window.blit(self.player1_score_text, (10, 10))
 
-            self.ball.draw(self.window)
+                self.player2_score_text = self.font.render(f"Player 2: {Game.player2_score}", True, (255, 255, 255))
+                self.window.blit(self.player2_score_text, (430, 10))
 
-            pygame.display.update()
-            self.clock.tick(60)
+                self.paddle1.draw(self.window)
+                self.paddle2.draw(self.window)
+
+                self.ball.draw(self.window)
+
+                pygame.display.update()
+                self.clock.tick(60)
+
+            else:
+                pygame.display.update()
+                self.clock.tick(60)
+
+                continue
 
 Game().run()
