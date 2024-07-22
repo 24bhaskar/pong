@@ -22,8 +22,8 @@ class Game:
                                         #color           x   y  width height
         self.paddle2 = entities.Paddle((255, 255, 255), 580, 200, 10, 100)
 
-        self.ball_random_y_pos = random.randint(10, 500)
-        self.ball = entities.Ball((255, 255, 255), 300, self.ball_random_y_pos, 10, 6.5, 6.5)
+        #self.ball_random_y_pos = random.randint(10, 500)
+        self.ball = entities.Ball((255, 255, 255), 300, 10, 10, 5, 5)
 
         self.font = pygame.font.Font("Arial.ttf", 32)
 
@@ -65,18 +65,18 @@ class Game:
 
                     #Check if ball hit top or bottom of paddle1
                     if self.ball.y < self.paddle1.y + self.paddle1.height / 2: # top
-                        self.ball.velocity[1] = -6.5
+                        self.ball.velocity[1] = -5
                     if self.ball.y > self.paddle1.y + self.paddle1.height / 2: # bottom
-                        self.ball.velocity[1] = 6.5
+                        self.ball.velocity[1] = 5
                     
                 if (self.paddle2.x + self.paddle2.width) - self.ball.x <= self.ball.size and self.ball.y >= self.paddle2.y and self.ball.y <= self.paddle2.y + self.paddle2.height:
                     self.ball.velocity[0] *= -1
 
                     #Check if ball hit top or bottom of paddle2
                     if self.ball.y < self.paddle2.y + self.paddle2.height / 2: # top
-                        self.ball.velocity[1] = -6.5
+                        self.ball.velocity[1] = -5
                     if self.ball.y > self.paddle2.y + self.paddle2.height / 2: # bottom
-                        self.ball.velocity[1] = 6.5
+                        self.ball.velocity[1] = 5
                 
                 pressed = pygame.key.get_pressed()
                 # Paddle 1 movement (player controlled)
@@ -85,10 +85,10 @@ class Game:
                 if pressed[pygame.K_s]:
                     self.paddle1.move_down(5)
                 # Paddle 2 movement (player controlled)
-                if pressed[pygame.K_UP]:
-                    self.paddle2.move_up(5)
-                if pressed[pygame.K_DOWN]:
-                    self.paddle2.move_down(5)
+                if self.ball.y > self.paddle2.y + self.paddle2.height / 2:
+                    self.paddle2.move_down(4)
+                if self.ball.y < self.paddle2.y + self.paddle2.height / 2:
+                    self.paddle2.move_up(4)
 
                 # Reset screen to black
                 self.window.fill((0, 0, 0))
